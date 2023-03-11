@@ -1,5 +1,5 @@
-import MyInput from "../components/UI/MyInput/MyInput";
-import MyButton from "../components/UI/MyButton/MyButton";
+import MyInput from "./UI/MyInput/MyInput";
+import MyButton from "./UI/MyButton/MyButton";
 import styles from "@/styles/app.module.css";
 
 const D3Popup = () => {

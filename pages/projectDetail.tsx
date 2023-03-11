@@ -1,14 +1,13 @@
-import styles from "../styles/app.module.css";
-import swiper from 'swiper/css';
+import ElementPopup from "@/components/ElementPopup";
+import React from 'react';
+import ReactAudioPlayer from 'react-audio-player';
+import { Navigation, Pagination } from 'swiper';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import MyModal from "../components/UI/MyModal/MyModal";
-import React, { useState } from 'react';
-import Block from "../components/UI/Block/Block";
-import ElementPopup from "@/components/ElementPopup";
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination} from 'swiper';
-import ReactAudioPlayer from 'react-audio-player';
+import Block from "../components/UI/Block/Block";
+import MyModal from "../components/UI/MyModal/MyModal";
+import styles from "../styles/app.module.css";
 
 function ProjectDeatil() {
 
