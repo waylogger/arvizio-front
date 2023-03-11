@@ -27,7 +27,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "components/Registration.jsx"  ],
   "exclude": [
     "node_modules"
   ]
