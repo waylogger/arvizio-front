@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@next/font": "13.1.6",
+    "axios": "^1.3.4",
     "next": "13.1.6",
     "react": "18.2.0",
     "react-audio-player": "^0.17.0",
@@ -19,5 +20,11 @@
   },
   "devDependencies": {
     "@types/react": "18.0.28"
-  }
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 4,
+    "semi": true,
+    "singleQuote": true
+}
 }

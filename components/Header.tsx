@@ -1,31 +1,55 @@
-import styles from "../styles/app.module.css";
-import MyInput from "../components/UI/MyInput/MyInput";
+import { api } from '@/api/api-client';
+import { UserContext } from '@/context';
+import { useContext } from 'react';
+import styles from '../styles/app.module.css';
 
-const Header = () => (
-    <header className={styles.header}>
-        <div className={styles.headerL}>
-            <div className={styles.logo}>
-                <a href="/"><img src="/logo.svg" alt="arvizio" /></a>
-            </div>
-            <div className={styles.logo}>
-                <a href="https://moscow.refutur.com/ru/"><img src="/logor.svg" alt="arvizio" /></a>
-            </div>
-        </div>
+const Header = () => {
+    const [user, setUser] = useContext(UserContext);
 
-        <div className={styles.headerR}>
-            <div className={styles.inputSearhR}>
-                <input className={styles.inputSearh} />
-            </div>
-            <div className={styles.headerAvatar}>
-                <div className={styles.headerAvatarIcon}>
-                    <img src="/avatar.jpg" alt="arvizio" />
+    return (
+        <header className={styles.header}>
+            <div className={styles.headerL}>
+                <div className={styles.logo}>
+                    <a href="/">
+                        <img src="/logo.svg" alt="arvizio" />
+                    </a>
                 </div>
-                <div className={styles.headerAvatarEmail}>
-                    <a href="#">q.vasilkov@arvizio.com</a>
+                <div className={styles.logo}>
+                    <a href="https://moscow.refutur.com/ru/">
+                        <img src="/logor.svg" alt="arvizio" />
+                    </a>
                 </div>
             </div>
-        </div>
-    </header>
-);
+
+            <div className={styles.headerR}>
+                <div className={styles.inputSearhR}>
+                    <input className={styles.inputSearh} />
+                </div>
+                <div className={styles.headerAvatar}>
+                    <div className={styles.headerAvatarIcon}>
+                        <img
+                            className={styles.headerAvatarIcon}
+                            src={user?.photo ?? '/avatar.jpg'}
+                            alt="arvizio"
+                        />
+                    </div>
+                    <div className={styles.headerAvatarEmail}>
+                        <a href="#">
+                            {user?.email ?? user?.name ?? 'guest'}
+                        </a>
+                    </div>
+                </div>
+                <div className={[styles.headerAvatarEmail,styles.headerLogout].join(', ')} onClick={
+                    ()=>{
+                        api.logout().then(res => {
+                            if (!res) return 
+                            setUser(null)
+                        })
+                    }
+                }>Выход</div>
+            </div>
+        </header>
+    );
+};
 
 export default Header;
