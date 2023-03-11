@@ -1,0 +1,42 @@
+.myBtn {
+    padding: 15px 105px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 23px;
+    color: #000000;
+    cursor: pointer;
+    background: #FFFFFF;
+    border: 0.7px solid #CCCCCC;
+    border-radius: 6px;
+    margin: 20px auto;
+}
+.myBtn:hover {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 145%;
+    color: #04CA6B;
+    border: 0.7px solid #04CA6B;
+}
+.myBtn:focus {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 145%;
+    color: #04CA6B;
+    border: 0.7px solid #04CA6B;
+}
+.myBtn:active {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 145%;
+    color: #59FFAF;
+    border: 0.7px solid #59FFAF;
+}
+@media (max-width: 560px) {
+    .myBtn {
+        padding: 15px 65px;
+    }
+}

@@ -1,0 +1,39 @@
+.myModal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: none;
+    z-index: 999;
+    background: rgba(0,0,0, 0.5);
+}
+
+.myModalContent {
+    padding: 40px;
+    background: white;
+    border-radius: 16px;
+    min-width: 556px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.myModalContent h1 {
+    text-align: center;
+    padding: 30px 0px 0px 0px;
+    display: block;
+    font-family: 'Acron';
+}
+.myModal.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 560px) {
+    .myModalContent {
+        min-width: auto;
+        max-width: 320px;
+        padding: 20px;
+    }
+}

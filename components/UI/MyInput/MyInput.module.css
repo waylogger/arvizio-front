@@ -1,0 +1,36 @@
+.myInput {
+    width: 576px;
+    padding: 5px 15px;
+    border: 0.7px solid #B5B5B5;
+    border-radius: 6px;
+    height: 60px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 23px;
+    color: #B5B5B5;
+    margin-bottom: 30px;
+    outline: none;
+    position: relative;
+}
+.myInput:hover {
+    border: 0.7px solid #242424;
+}
+.myInput:focus {
+    border: 0.7px solid #242424;
+}
+.myInput:active {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+}
+@media (max-width: 560px) {
+    .myInput {
+        width: 280px;
+        height: 48px;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 145%;
+        color: #A6A6A6;
+    }
+}

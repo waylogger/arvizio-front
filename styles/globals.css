@@ -1,0 +1,83 @@
+
+html,
+body {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-family: 'Euclid Circular A', sans-serif;
+}
+@font-face {
+    font-family: 'Acron';
+    src: url('../public/Acrom/Acrom-Regular.woff') format('woff');
+    font-display: swap;
+    font-weight: 400;
+    font-style: normal;
+}
+.mySwiper {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.mySwiper .swiper-button-prev::after {
+    content: '';
+    display: none;
+    background: url("../public/left-btn.png");
+    background-repeat: no-repeat;
+}
+.mySwiper .swiper-button-prev {
+    position: absolute;
+    top: 98%;
+    background: url("../public/left-btn.png");
+    background-repeat: no-repeat;
+    z-index: 99;
+    left: 38%;
+    cursor: pointer;
+}
+.mySwiper .swiper-button-next::after {
+    content: '';
+    display: none;
+}
+.mySwiper .swiper-button-next {
+    top: 98%;
+    background: url("../public/right-btn.png");
+    background-repeat: no-repeat;
+    z-index: 99;
+    right: 38%;
+    cursor: pointer;
+}
+
+.newProjectBlock .swiper-pagination-bullet {
+    background: #9C9C9C;
+}
+.mySwiper .swiper-horizontal>.swiper-pagination-bullets .swiper-pagination-bullet, .mySwiper .swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet {
+    background: #9C9C9C;
+    margin: 0px 22px;
+    opacity: 1;
+}
+.mySwiper .swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet-active {
+    background: #04CA6B;
+}
+@media (max-width: 1160px) {
+    .mySwiper .swiper-button-next {
+        right: 33%;
+        top: 99%;
+    }
+    .mySwiper .swiper-button-prev {
+        left: 33%;
+        top: 99%;
+    }
+}
+@media (max-width: 560px) {
+    .mySwiper .swiper-button-next {
+        right: 8%;
+        top: 99%;
+    }
+    .mySwiper .swiper-button-prev {
+        left: 8%;
+        top: 99%;
+    }
+}
