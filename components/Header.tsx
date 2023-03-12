@@ -21,7 +21,10 @@ const Header = () => {
                 </div>
             </div>
 
-            <div className={styles.headerR}>
+            <div className={styles.headerR} 
+            style={
+                user ? {display: 'inherit'} : {display: 'none'}
+            }>
                 <div className={styles.inputSearhR}>
                     <input className={styles.inputSearh} />
                 </div>
@@ -35,7 +38,7 @@ const Header = () => {
                     </div>
                     <div className={styles.headerAvatarEmail}>
                         <a href="#">
-                            {user?.email ?? user?.name ?? 'guest'}
+                            {user?.email ?? user?.name}
                         </a>
                     </div>
                 </div>
