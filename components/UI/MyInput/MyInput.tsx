@@ -3,7 +3,7 @@ import classes from './MyInput.module.css';
 
 export default function MyInput (
     props: {
-        type: 'text' | 'password',
+        type: 'text' | 'password' | 'file',
         placeholder: string,
         onInput: (event) => void
     }

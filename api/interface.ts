@@ -6,6 +6,29 @@ export interface IUser {
     name: string;
     id?: number;
 }
+
+export enum MediaType {
+    image = 'image',
+    video = 'video',
+    audio = 'audio',
+    panorama = 'panorama',
+    model3d = 'model3d',
+    pseudo3d = 'pseudo3d',
+    logo = 'logo',
+}
+
+export enum FileTypeEnum {
+    image = 'image',
+    trumb = 'trumb',
+    video = 'video',
+    audio = 'audio',
+    document = 'document',
+    other = 'other',
+    panorama = 'panorama',
+    pseudo3d = 'pseudo3d',
+    model3d = 'model3d',
+}
+
 export interface IApiClient {
     checkSession(): Promise<IUser | null>;
 }
@@ -19,4 +42,8 @@ export enum ApiMethodsEnum {
     googlePath = 'session/auth/go',
     vkPath = 'session/auth/go',
     yaPath = 'session/auth/go',
+    createProject = 'project',
+    createMedia = 'media',
+    createFile = 'file',
+    uploadFile = 'upload',
 }

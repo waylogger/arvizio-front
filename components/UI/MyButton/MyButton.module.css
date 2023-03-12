@@ -27,6 +27,21 @@
     color: #04CA6B;
     border: 0.7px solid #04CA6B;
 }
+
+.myBtn:disabled {
+    color: #ccc;
+    border: none;
+}
+.myBtn:disabled:active{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 145%;
+    color: red;
+    border: none;
+}
+
+
 .myBtn:active {
     font-style: normal;
     font-weight: 500;

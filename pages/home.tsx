@@ -8,7 +8,7 @@ import { directive } from 'vue/types/umd';
 const navigation = [
     { id: 1, title: 'Новый проект', path: '/newProject' },
     { id: 2, title: 'Библиотека', path: '/project' },
-    { id: 2, title: 'Демо', path: '/demo' },
+    { id: 3, title: 'Демо', path: '/demo' },
 ];
 
 function Index() {

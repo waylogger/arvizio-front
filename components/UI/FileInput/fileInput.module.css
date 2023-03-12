@@ -1,0 +1,11 @@
+
+
+
+.fileInput {
+    opacity: 0;
+    position: absolute;
+}
+
+.uploadButton {
+    cursor: pointer;
+}
