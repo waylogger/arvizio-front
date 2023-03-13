@@ -5,9 +5,9 @@ import { Navigation, Pagination } from 'swiper';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import Block from "../components/UI/Block/Block";
-import MyModal from "../components/UI/MyModal/MyModal";
-import styles from "../styles/app.module.css";
+import Block from "@/components/UI/Block/Block";
+import MyModal from "@/components/UI/MyModal/MyModal";
+import styles from "@/styles/app.module.css";
 
 function ProjectDeatil() {
 
