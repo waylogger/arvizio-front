@@ -8,9 +8,9 @@ import {
 import { config } from './cfg';
 import axios from 'axios';
 
-class ApiClient implements IApiClient {
-    private backend = config.url.backend;
-    private options() {
+export class ApiClient implements IApiClient {
+    protected backend = config.url.backend;
+    protected options() {
         return {
             withCredentials: true,
         };
