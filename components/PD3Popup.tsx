@@ -1,20 +1,22 @@
-import MyInput from "./UI/MyInput/MyInput";
-import MyButton from "./UI/MyButton/MyButton";
-import styles from "@/styles/app.module.css";
+import MyInput from './UI/MyInput/MyInput';
+import MyButton from './UI/MyButton/MyButton';
+import styles from '@/styles/app.module.css';
 import { useEffect, useState } from 'react';
 import { api } from '@/api/api-client';
 import { useRouter } from 'next/router';
-import FileInput from './UI/FileInput';
+import FileInput, { fileInputMessage } from './UI/FileInput';
 import { FileTypeEnum, MediaType } from '@/api/interface';
 
 const PD3Popup = (props: { setModal: (status: boolean) => void }) => {
-    const [name,setName] = useState(null)
-    const [address,setAddress] = useState(null)
+    const [name, setName] = useState(null);
+    const [address, setAddress] = useState(null);
     const [projectId, setProjectId] = useState(null);
-    const [files,setFiles] = useState([])
+    const [files, setFiles] = useState([]);
+
 
     const router = useRouter();
     useEffect(() => {
+
         if (!projectId) return;
         props.setModal(false);
         router.push('/project');
@@ -24,24 +26,34 @@ const PD3Popup = (props: { setModal: (status: boolean) => void }) => {
             <div className={styles.formProjectTitle}>Псевдо 3D</div>
             <div className={styles.formProjectDescr}>Создание проекта</div>
             <form className={styles.formLogin}>
-                <MyInput type="text" placeholder="Имя проекта" onInput={
-                    (event) => {
-                        setName(event.target.value)
-                    }
-                }/>
-                <MyInput type="text" placeholder="Адрес вашего сайта (опционально)" onInput={
-                    (event) => {
-                        setAddress(event.target.value)
-                    }
-                }/>
+                <MyInput
+                    type="text"
+                    placeholder="Имя проекта"
+                    onInput={(event) => {
+                        setName(event.target.value);
+                    }}
+                />
+                <MyInput
+                    type="text"
+                    placeholder="Адрес вашего сайта (опционально)"
+                    onInput={(event) => {
+                        setAddress(event.target.value);
+                    }}
+                />
                 <div className={styles.customFileUpload}>
-                    <FileInput onUpload={setFiles} accept='.png, .jpeg, .jpg'/>
+                    <FileInput
+                        name={'pseudo3d'}
+                        onUpload={setFiles}
+                        accept=".png, .jpeg, .jpg"
+                    >
+                        {<span>{fileInputMessage(files)}</span>}
+                    </FileInput>
                 </div>
                 <MyButton
                     disabled={name ? false : true}
                     onClick={(event) => {
                         event.preventDefault();
-                   
+
                         if (!files || !files.length) {
                             api.createProject({
                                 name,
@@ -50,7 +62,7 @@ const PD3Popup = (props: { setModal: (status: boolean) => void }) => {
                             }).then((res) => {
                                 setProjectId(res);
                             });
-                            return
+                            return;
                         }
 
                         api.createProjectWithFiles(
@@ -60,9 +72,9 @@ const PD3Popup = (props: { setModal: (status: boolean) => void }) => {
                                 type: 'pseudo3d',
                             },
                             files,
-                            true,
-                            MediaType.panorama,
-                            FileTypeEnum.panorama
+                            false,
+                            MediaType.pseudo3d,
+                            FileTypeEnum.pseudo3d
                         ).then((res) => setProjectId(res));
                     }}
                 >

@@ -1054,7 +1054,9 @@
   filter: brightness(120%);
 }
 
-
+.fileInput{
+  width: 100%;
+}
 .elementRadio:hover
 {
   background: #FFFFFF;

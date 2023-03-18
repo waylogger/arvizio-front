@@ -4,7 +4,7 @@ import styles from '@/styles/app.module.css';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { api } from '@/api/api-client';
-import FileInput from './UI/FileInput';
+import FileInput, { fileInputMessage } from './UI/FileInput';
 import { FileTypeEnum, MediaType } from '@/api/interface';
 
 const TPopup = (props: { setModal: (status: boolean) => void }) => {
@@ -38,7 +38,9 @@ const TPopup = (props: { setModal: (status: boolean) => void }) => {
                     }}
                 />
                 <div className={styles.customFileUpload}>
-                    <FileInput onUpload={setFiles} accept=".png, .jpeg, .jpg" />
+                    <FileInput name={'input-360'} onUpload={setFiles} accept=".png, .jpeg, .jpg">
+                        {<span>{fileInputMessage(files)}</span>}
+                    </FileInput>
                 </div>
                 <MyButton
                     disabled={name ? false : true}
@@ -53,7 +55,7 @@ const TPopup = (props: { setModal: (status: boolean) => void }) => {
                             }).then((res) => {
                                 setProjectId(res);
                             });
-                            return
+                            return;
                         }
 
                         api.createProjectWithFiles(
