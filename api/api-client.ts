@@ -94,6 +94,62 @@ export class ApiClient implements IApiClient {
         }
     }
 
+    public async createMediaAndUpload(
+        mediaType: MediaType,
+        projectId: number,
+        files: File[],
+        oneFileIsMedia: boolean,
+        fileType: FileTypeEnum
+    ) {
+        switch (oneFileIsMedia) {
+            case true: {
+                for (const file of files) {
+                    const media = await this.createMedia({
+                        type: mediaType,
+                        project: projectId,
+                        description: '',
+                        name: 'media',
+                    }).then((res) => res.data);
+
+                    const newFile = await this.createFile({
+                        media,
+                        name: file.name,
+                        type: fileType,
+                    }).then((res) => res.data);
+
+                    await this.uploadFile({
+                        file,
+                        mediaId: media,
+                        fileId: newFile,
+                    });
+                }
+                break;
+            }
+            case false: {
+                const media = await this.createMedia({
+                    type: mediaType,
+                    project: projectId,
+                    description: '',
+                    name: 'media',
+                }).then((res) => res.data);
+                for (const file of files) {
+                    const newFile = await this.createFile({
+                        media,
+                        name: file.name,
+                        type: fileType,
+                    }).then((res) => res.data);
+
+                    await this.uploadFile({
+                        file,
+                        mediaId: media,
+                        fileId: newFile,
+                    });
+                }
+                break;
+            }
+        }
+    }
+
     async createProjectWithFiles(
         opts: {
             name: string;
@@ -107,54 +163,13 @@ export class ApiClient implements IApiClient {
     ) {
         try {
             const projectId = await this.createProject(opts);
-
-            switch (oneFileIsMedia) {
-                case true: {
-                    for (const file of files) {
-                        const media = await this.createMedia({
-                            type: mediaType,
-                            project: projectId,
-                            description: '',
-                            name: 'media',
-                        }).then((res) => res.data);
-
-                        const newFile = await this.createFile({
-                            media,
-                            name: file.name,
-                            type: fileType,
-                        }).then((res) => res.data);
-
-                        await this.uploadFile({
-                            file,
-                            mediaId: media,
-                            fileId: newFile,
-                        });
-                    }
-                    break;
-                }
-                case false: {
-                    const media = await this.createMedia({
-                        type: mediaType,
-                        project: projectId,
-                        description: '',
-                        name: 'media',
-                    }).then((res) => res.data);
-                    for (const file of files) {
-                        const newFile = await this.createFile({
-                            media,
-                            name: file.name,
-                            type: fileType,
-                        }).then((res) => res.data);
-
-                        await this.uploadFile({
-                            file,
-                            mediaId: media,
-                            fileId: newFile,
-                        });
-                    }
-                    break;
-                }
-            }
+            await this.createMediaAndUpload(
+                mediaType,
+                projectId,
+                files,
+                oneFileIsMedia,
+                fileType
+            );
             return projectId;
         } catch (e) {
             return null;

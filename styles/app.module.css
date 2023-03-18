@@ -1014,6 +1014,7 @@
   align-items: center;
   padding-left: 20px;
   color: #D9D9D9;
+  cursor: pointer;
 }
 .elementRadio input[type=radio] {
   display: none;
@@ -1051,6 +1052,8 @@
 .elementRadio label:hover:before {
   filter: brightness(120%);
 }
+
+
 .elementRadio:hover
 {
   background: #FFFFFF;

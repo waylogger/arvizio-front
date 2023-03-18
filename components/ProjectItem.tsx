@@ -60,7 +60,7 @@ const ProjectItem = (
             </div>
             <div className={styles.ProjectItemBtns}>
                 <div className={styles.ProjectItemBtnDetail}>
-                    <Link href={`/projectDetail/${props.project.id}/${props.project.name?.replace(/\s+/g,'_')}`}>Перейти</Link>
+                    <Link href={`/project-detail/${props.project.type}/${props.project.id}/${props.project.name?.replace(/\s+/g,'_')}`}>Перейти</Link>
                 </div>
                 <div className={styles.ProjectItemBtnDelete}>
                     <button onClick={
