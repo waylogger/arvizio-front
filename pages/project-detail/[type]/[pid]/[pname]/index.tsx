@@ -1,6 +1,6 @@
 import { dowloader } from '@/api/download/file';
 import { apiFileGet } from '@/api/file/get';
-import { IFile } from '@/api/file/interface';
+import { FileTypeEnum, IFile } from '@/api/file/interface';
 import { apiMediaGet } from '@/api/media/get';
 import { IMedia, MediaType } from '@/api/media/interface';
 import { apiProjectGet } from '@/api/project/get';
@@ -15,6 +15,56 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { ProjectContext } from './context';
+
+function formatFileName(name: string, maxLength: number) {
+    const len = name.length
+    if (len <= maxLength)  return name
+
+    const start = name.slice(0,maxLength/2)
+    const end = name.slice(-maxLength/2)
+    return `${start}...${end}`
+
+
+}
+function getMainFileName(files: IFile[], mediaType: MediaType) {
+    let file: string;
+
+    switch (mediaType) {
+        case MediaType.audio: {
+            file =
+                files.find((file) => file.type === FileTypeEnum.audio)?.name ??
+                'audio.mp3';
+            break;
+        }
+        case MediaType.video: {
+            file =
+                files.find((file) => file.type === FileTypeEnum.video)?.name ??
+                'noname.mp4';
+            break;
+        }
+        case MediaType.panorama: {
+            file =
+                files.find((file) => file.type === FileTypeEnum.panorama)?.name ??
+                'noname.jpeg';
+            break;
+        }
+        case MediaType.pseudo3d: {
+            file =
+                files.find((file) => file.type === FileTypeEnum.pseudo3d)?.name ??
+                'noname.p3d';
+            break;
+        }
+        case MediaType.image: {
+            file =
+                files.find((file) => file.type === FileTypeEnum.image)?.name ??
+                'noname.jpg';
+            break;
+        }
+    }
+
+    return formatFileName(file,16)
+
+}
 
 function ProjectDeatil() {
     const [blockBottom, setBlockBottom] = React.useState(false);
@@ -31,60 +81,57 @@ function ProjectDeatil() {
             mediaId: number;
             mediaType: MediaType;
             files: IFile[]; // change path here
-            order: number
+            order: number;
+            name: string;
         }[]
     >();
 
- 
     useEffect(() => {
-        
         if (!router.query.pid || !refresh) return;
         setProjectId(router.query.pid as string);
         apiProjectGet
             .getSingleProject(parseInt(router.query.pid as string))
             .then((res) => setProject(res ? res[0] : null))
-            .then(res => {
-                if (refresh) setRefresh(false)
-            })
-    }, [router.query.pid,refresh]);
+            .then((res) => {
+                if (refresh) setRefresh(false);
+            });
+    }, [router.query.pid, refresh]);
 
     useEffect(() => {
-      
         if (!project) return;
-        
-        apiMediaGet.get(project.id.toString()).then((res) =>
-        {
 
-        setMedias(res)
-    });
+        apiMediaGet.get(project.id.toString()).then((res) => {
+            setMedias(res);
+        });
     }, [project]);
 
     useEffect(() => {
         if (!medias) return;
-        setFiles(null)
+        setFiles(null);
         for (const media of medias) {
             apiFileGet.get(media.id.toString()).then((res) => {
                 console.log({
-                    res: res.length
+                    res: res.length,
                 });
-                
+
                 setFiles((prevState) => {
+                    const files = res.map(
+                        // апдейтим файлы при загрузке
+                        (file) => {
+                            const upgradedFile = {
+                                ...file,
+                                // path в каждом файле - это урл для скачивания
+                                path: dowloader.url(file, media),
+                            };
+                            return upgradedFile;
+                        }
+                    );
                     const newFile = {
                         mediaId: media.id,
                         mediaType: media.type,
                         order: media.order,
-                        files: res.map(
-                            // апдейтим файлы при загрузке
-                            (file) => {
-                                
-                                const upgradedFile = {
-                                    ...file,
-                                    // path в каждом файле - это урл для скачивания
-                                    path: dowloader.url(file, media),
-                                };
-                                return upgradedFile;
-                            }
-                        ),
+                        name: getMainFileName(files,media.type),
+                        files,
                     };
 
                     return [...(prevState ?? []), newFile];
@@ -175,6 +222,7 @@ function ProjectDeatil() {
                                 <input
                                     type="checkbox"
                                     className={styles.checkSwith}
+                                    style={{ zIndex: 1 }}
                                 />
                                 <span
                                     className={styles.checkboxGoogleSwitch}

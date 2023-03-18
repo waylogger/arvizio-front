@@ -1,12 +1,17 @@
-
 html,
 body {
     padding: 0;
     margin: 0;
 }
-
+@import url('../public/EuclidCircular/stylesheet.css');
 body {
     font-family: 'Euclid Circular A', sans-serif;
+
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+body::-webkit-scrollbar {
+    display: none;
 }
 @font-face {
     font-family: 'Acron';
@@ -25,13 +30,13 @@ body {
 .mySwiper .swiper-button-prev::after {
     content: '';
     display: none;
-    background: url("../public/left-btn.png");
+    background: url('../public/left-btn.png');
     background-repeat: no-repeat;
 }
 .mySwiper .swiper-button-prev {
     position: absolute;
     top: 98%;
-    background: url("../public/left-btn.png");
+    background: url('../public/left-btn.png');
     background-repeat: no-repeat;
     z-index: 99;
     left: 38%;
@@ -43,7 +48,7 @@ body {
 }
 .mySwiper .swiper-button-next {
     top: 98%;
-    background: url("../public/right-btn.png");
+    background: url('../public/right-btn.png');
     background-repeat: no-repeat;
     z-index: 99;
     right: 38%;
@@ -51,15 +56,23 @@ body {
 }
 
 .newProjectBlock .swiper-pagination-bullet {
-    background: #9C9C9C;
+    background: #9c9c9c;
 }
-.mySwiper .swiper-horizontal>.swiper-pagination-bullets .swiper-pagination-bullet, .mySwiper .swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet {
-    background: #9C9C9C;
+.mySwiper
+    .swiper-horizontal
+    > .swiper-pagination-bullets
+    .swiper-pagination-bullet,
+.mySwiper
+    .swiper-pagination-horizontal.swiper-pagination-bullets
+    .swiper-pagination-bullet {
+    background: #9c9c9c;
     margin: 0px 22px;
     opacity: 1;
 }
-.mySwiper .swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet-active {
-    background: #04CA6B;
+.mySwiper
+    .swiper-pagination-horizontal.swiper-pagination-bullets
+    .swiper-pagination-bullet-active {
+    background: #04ca6b;
 }
 @media (max-width: 1160px) {
     .mySwiper .swiper-button-next {

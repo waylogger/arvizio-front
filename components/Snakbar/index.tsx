@@ -22,12 +22,43 @@ function findImageForNavigation(files: IFile[]) {
     if (trumb) return trumb;
 }
 
+function imageLogo(mediaType: MediaType) {
+    switch(mediaType){
+        case MediaType.panorama:{
+            return '/pano.svg'
+        }
+        case MediaType.video:{
+            return '/video.svg'
+        }
+        case MediaType.audio:{
+            return '/audio.svg'
+        }
+        case MediaType.model3d:
+        case MediaType.pseudo3d: {
+            return '/3d.svg'
+        }
+        default: 
+        return '/image.svg'
+    }
+}
+
+function imagePlaceHolder(mediaType: MediaType) {
+    switch(mediaType){
+        case MediaType.audio:{
+            return '/audio-placeholder.jpg'
+        }
+        default: 
+        return '/placeholder.jpg'
+    } 
+}
+
 export default function Snakbar(props: {
     project: IProject;
     medias: IMedia[];
     files: {
+        name: string;
         mediaId: number;
-        order: number,
+        order: number;
         mediaType: MediaType;
         files: IFile[]; // change path here
     }[];
@@ -49,6 +80,7 @@ export default function Snakbar(props: {
     const [dropMedia, setDropMedia] = useState<number>();
 
     useEffect(() => {
+        // add media
         if (
             !mediaForDownload ||
             !mediaForDownload.files ||
@@ -66,6 +98,7 @@ export default function Snakbar(props: {
     }, [mediaForDownload]);
 
     useEffect(() => {
+        // delete
         if (!mediaForDelete) return;
 
         apiMediaDelete.delete(mediaForDelete.toString()).then((res) => {
@@ -74,25 +107,19 @@ export default function Snakbar(props: {
     }, [mediaForDelete]);
 
     useEffect(() => {
-        console.log({
-            dragMedia,
-            dropMedia
-        });
-        
+        // drag and drop
+
         if (!dragMedia || !dropMedia) return;
 
-        const from = props.files.find(media => media.mediaId === dragMedia)
-        const to = props.files.find(media => media.mediaId === dropMedia)
+        const from = props.files.find((media) => media.mediaId === dragMedia);
+        const to = props.files.find((media) => media.mediaId === dropMedia);
 
-        apiMediaPatch.patch(from.mediaId,to.order)
-        apiMediaPatch.patch(to.mediaId,from.order)
+        apiMediaPatch.patch(from.mediaId, to.order);
+        apiMediaPatch.patch(to.mediaId, from.order);
 
-        const xch = from.order
-        from.order = to.order
-        to.order =xch
-
-
-
+        const xch = from.order;
+        from.order = to.order;
+        to.order = xch;
 
         setDragMedia(null);
         setDropMedia(null);
@@ -100,82 +127,83 @@ export default function Snakbar(props: {
 
     const [mode, setMode] = useState<'open' | 'close'>('close');
     return (
-        <div
-            className={styles.snackbar}
-            style={
-                mode === 'open'
-                    ? {
-                          maxHeight: '200px',
-                          height: '200px',
-                      }
-                    : {
-                          maxHeight: '50px',
-                          height: '50px',
-                      }
-            }
-        >
-            <div
-                className={styles.snackbarButton}
-                onClick={() => setMode(mode === 'close' ? 'open' : 'close')}
-            >
-                <span>
-                    Навигация <span>{mode === 'close' ? '+' : '-'}</span>
+        <div className={styles.snackbar}>
+            <div className={styles.snackbarButton}>
+                <span
+                    className={styles.snackButtonNote}
+                    onClick={() => setMode(mode === 'close' ? 'open' : 'close')}
+                >
+                    Навигация
+                    <span>
+                        <img src={mode === 'close' ? '/up.svg' : '/down.svg'} />
+                    </span>
                 </span>
             </div>
-            <div className={styles.imageLine}>
-                <div className={styles.images}>
-                    {props.files && props.files.length ? (
-                        props.files.sort(
-                            (a,b) => a.order - b.order
-                        ).map((filesOfMedia) => {
-                            return (
-                                <SnackbarImage
-                                    dragHandler={(media: number) => {
-                                        console.log({
-                                            drag: media,
-                                        });
-
-                                        setDragMedia(media);
-                                    }}
-                                    dropHandler={(media) => {
-                                        console.log({
-                                            drop: media,
-                                        });
-
-                                        setDropMedia(media);
-                                    }}
-                                    mediaId={filesOfMedia.mediaId}
-                                    key={filesOfMedia.mediaId}
-                                    url={
-                                        findImageForNavigation(
-                                            filesOfMedia.files
-                                        )?.path
-                                    }
-                                    type={filesOfMedia.mediaType}
-                                >
-                                    <button
-                                        onClick={() => {
-                                            setMediaForDelete(
-                                                filesOfMedia.mediaId
-                                            );
-                                        }}
-                                    >
-                                        Удалить
-                                    </button>
-                                </SnackbarImage>
-                            );
-                        })
-                    ) : (
-                        <div>no images yet</div>
-                    )}
-                </div>
-                <div
-                    className={styles.addMedia}
-                    onClick={() => {
-                        setLoadDialogStatus('open');
-                    }}
-                >
-                    +
+            <div
+                className={[styles.imageLine].join(' ')}
+                style={{
+                    display: mode === 'open' ? 'flex' : 'none',
+                }}
+            >
+                <div className={styles.container}>
+                    <div className={[styles.images].join(' ')}>
+                        {props.files && props.files.length ? (
+                            props.files
+                                .sort((a, b) => a.order - b.order)
+                                .map((filesOfMedia) => {
+                                    return (
+                                        <SnackbarImage
+                                            name={filesOfMedia.name}
+                                            dragHandler={(media: number) => {
+                                                setDragMedia(media);
+                                            }}
+                                            dropHandler={(media) => {
+                                                setDropMedia(media);
+                                            }}
+                                            mediaId={filesOfMedia.mediaId}
+                                            key={filesOfMedia.mediaId}
+                                            url={
+                                                findImageForNavigation(
+                                                    filesOfMedia.files
+                                                )?.path ?? imagePlaceHolder(filesOfMedia.mediaType)
+                                            }
+                                            type={filesOfMedia.mediaType}
+                                        >
+                                            <img
+                                                src={imageLogo(
+                                                    filesOfMedia.mediaType
+                                                )}
+                                                alt=""
+                                            />
+                                            <button
+                                                className={
+                                                    styles.deleteImageBtn
+                                                }
+                                                onClick={() => {
+                                                    setMediaForDelete(
+                                                        filesOfMedia.mediaId
+                                                    );
+                                                }}
+                                            >
+                                                <img src="/delete.svg" alt="" />
+                                            </button>
+                                        </SnackbarImage>
+                                    );
+                                })
+                        ) : (
+                            <div>Добавьте первый медиа-контент</div>
+                        )}
+                        <div
+                            className={styles.addMedia}
+                            onClick={() => {
+                                setLoadDialogStatus('open');
+                            }}
+                        >
+                            <button>
+                                <img src="/add.svg" alt="" />
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 

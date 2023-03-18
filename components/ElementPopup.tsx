@@ -26,6 +26,10 @@ function getAccess(type: MediaType) {
 }
 
 function isAllowedMedia(media: MediaType, project: ProjectType) {
+
+    if (project === ProjectType.gallery) {
+        return false
+    }
     if (project === ProjectType.pseudo3d) {
         return media === MediaType.pseudo3d ? false : true;
     }

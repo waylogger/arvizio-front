@@ -29,6 +29,7 @@ import style from './snackbarImage.module.css';
 // }
 export default function SnackbarImage(props: {
     url: string;
+    name: string;
     mediaId: number;
     type: MediaType;
     children: ReactNode;
@@ -59,6 +60,9 @@ export default function SnackbarImage(props: {
             >
                 {props.children}
             </div>
+             <div className={style.imageName}>
+                {props.name}
+             </div>
         </div>
     );
 }
