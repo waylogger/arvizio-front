@@ -1,14 +1,13 @@
-import styles from '../styles/app.module.css';
+import { UserContext } from '@/context';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useContext, useEffect } from 'react';
-import { UserContext } from '@/context';
-import { directive } from 'vue/types/umd';
+import styles from '../styles/app.module.css';
 
 const navigation = [
     { id: 1, title: 'Новый проект', path: '/newProject' },
     { id: 2, title: 'Библиотека', path: '/project' },
-    { id: 3, title: 'Демо', path: '/demo' },
+    // { id: 3, title: 'Демо', path: '/demo' },
 ];
 
 function Index() {
@@ -20,6 +19,8 @@ function Index() {
         if (!user ) {
             router.push('/');
         }
+
+      
     }, [user]);
 
     return (
@@ -39,7 +40,7 @@ function Index() {
             <div className={styles.menuBottom}>
                 <div className={styles.links}>
                     {navigation.map(({ id, title, path }) => (
-                        <Link key={id} href={path} className={styles.linksItem}>
+                        <Link id={id.toString()} key={id} href={path} className={styles.linksItem}>
                             {title}
                         </Link>
                     ))}

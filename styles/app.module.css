@@ -1332,7 +1332,8 @@
     font-size: 12px;
   }
   .newProjectBlockControls {
-    flex-direction: column-reverse;
+    display: flex;
+    justify-content: flex-end;
   }
   .btnReposts {
     margin-bottom: 40px;
