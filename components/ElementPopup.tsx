@@ -74,11 +74,15 @@ const ElementPopup = (props: {
     const [files, setFiles] = useState<File[]>();
     const [error, setError] = useState<string>('');
     useEffect(() => {
-        if (!props.projectType) return;
+        if (!props.projectType ) return;
         if (props.projectType === ProjectType.pseudo3d)
             setMediaType(MediaType.pseudo3d);
         if (props.projectType === ProjectType.pano)
             setMediaType(MediaType.panorama);
+
+        if (!mediaType && props.projectType === ProjectType.gallery){
+            setMediaType(MediaType.image)
+        }
     });
 
     useEffect(() => {

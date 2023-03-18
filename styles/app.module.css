@@ -1032,7 +1032,7 @@
 .elementRadio label:before {
   content: "";
   display: inline-block;
-  width: 17px;
+  width: 20px;
   height: 18px;
   position: absolute;
   left: 0;
