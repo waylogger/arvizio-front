@@ -1,13 +1,10 @@
-import MyButton from './UI/MyButton/MyButton';
-import MyInput from './UI/MyInput/MyInput';
-import styles from '@/styles/app.module.css';
-import FileInput from './UI/FileInput';
-import { useEffect, useState } from 'react';
-import { MediaType } from '@/api/media/interface';
-import { api } from '@/api/api-client';
-import { ProjectType } from '@/api/project/interface';
 import { FileTypeEnum } from '@/api/file/interface';
-import { handleWebpackExternalForEdgeRuntime } from 'next/dist/build/webpack/plugins/middleware-plugin';
+import { MediaType } from '@/api/media/interface';
+import { ProjectType } from '@/api/project/interface';
+import styles from '@/styles/app.module.css';
+import { useEffect, useState } from 'react';
+import FileInput, { fileInputMessage } from './UI/FileInput';
+import MyButton from './UI/MyButton/MyButton';
 
 function getAccess(type: MediaType) {
     switch (type) {
@@ -26,9 +23,8 @@ function getAccess(type: MediaType) {
 }
 
 function isAllowedMedia(media: MediaType, project: ProjectType) {
-
     if (project === ProjectType.gallery) {
-        return false
+        return false;
     }
     if (project === ProjectType.pseudo3d) {
         return media === MediaType.pseudo3d ? false : true;
@@ -44,6 +40,21 @@ function isAllowedMedia(media: MediaType, project: ProjectType) {
     }
 
     return false;
+}
+
+function mediaImage(mediaType: MediaType): string {
+    switch (mediaType) {
+        case MediaType.audio:
+            return '/types/audio.png';
+        case MediaType.video:
+            return '/types/video.png';
+        case MediaType.panorama:
+            return '/types/panorama.png';
+        case MediaType.image:
+            return '/types/image.png';
+        case MediaType.pseudo3d:
+            return '/types/pseudo3D.png';
+    }
 }
 
 const ElementPopup = (props: {
@@ -67,6 +78,10 @@ const ElementPopup = (props: {
             setMediaType(MediaType.pseudo3d);
         if (props.projectType === ProjectType.pano)
             setMediaType(MediaType.panorama);
+
+        if (!mediaType && props.projectType === ProjectType.gallery) {
+            setMediaType(MediaType.image);
+        }
     });
 
     useEffect(() => {
@@ -74,7 +89,7 @@ const ElementPopup = (props: {
         setLoading(false);
         setFiles([]);
         props.closeDialog();
-        props.setLoadingDone(false)
+        props.setLoadingDone(false);
     });
 
     return (
@@ -91,6 +106,7 @@ const ElementPopup = (props: {
                         }}
                     >
                         <input
+                            onChange={() => {}}
                             type="radio"
                             id="1"
                             checked={mediaType === MediaType.image}
@@ -108,6 +124,7 @@ const ElementPopup = (props: {
                         }}
                     >
                         <input
+                            onChange={() => {}}
                             type="radio"
                             id="2"
                             checked={mediaType === MediaType.video}
@@ -125,6 +142,7 @@ const ElementPopup = (props: {
                         }}
                     >
                         <input
+                            onChange={() => {}}
                             type="radio"
                             id="3"
                             checked={mediaType === MediaType.audio}
@@ -142,6 +160,7 @@ const ElementPopup = (props: {
                         }}
                     >
                         <input
+                            onChange={() => {}}
                             type="radio"
                             id="4"
                             checked={mediaType === MediaType.panorama}
@@ -159,6 +178,7 @@ const ElementPopup = (props: {
                         }}
                     >
                         <input
+                            onChange={() => {}}
                             type="radio"
                             id="5"
                             checked={mediaType === MediaType.pseudo3d}
@@ -171,18 +191,23 @@ const ElementPopup = (props: {
                     </div>
                 </div>
                 <div className={styles.formRight}>
-                    <img src="/image1.jpg" />
+                    <img
+                        src={mediaImage(mediaType)}
+                        className={styles.mediaImage}
+                        alt=""
+                    />
                 </div>
             </div>
             <form className={styles.formLogin}>
-                <div>
+                <div className={styles.customFileUpload}>
                     <FileInput
+                        name={'element-popup'}
                         accept={getAccess(mediaType)}
                         onUpload={(files: File[]) => {
                             setFiles(files);
                         }}
                     >
-                        <span>Файлы для загрузки</span>
+                        <span>{fileInputMessage(files)}</span>
                     </FileInput>
                 </div>
                 <div>
