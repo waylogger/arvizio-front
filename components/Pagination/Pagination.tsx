@@ -32,10 +32,12 @@ export default function Pagination(props: {
     const [firstVisible, setFirstVisible] = useState<number>(0);
     const [lastVisible, setLastVisible] = useState<number>(0);
     const [eventSource, setEventSource] = useState<'click' | null>(null);
-
     useEffect(() => {
         setFirstVisible(0);
         setLastVisible(props.maxItems);
+        document.addEventListener('click', () => {
+            setEventSource(null);
+        });
     }, [props.maxItems]);
 
     useEffect(() => {
@@ -83,10 +85,7 @@ export default function Pagination(props: {
         if (select === current) return;
         // обновляем только после клика
         if (eventSource !== 'click') return;
-        console.log({
-            select,
-            current,
-        });
+
         setEventSource(null);
         props.onSelectMedia(select);
     }, [currentItem]);
