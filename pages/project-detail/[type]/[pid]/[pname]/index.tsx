@@ -6,15 +6,14 @@ import { IMedia, MediaType } from '@/api/media/interface';
 import { apiProjectGet } from '@/api/project/get';
 import { IProject } from '@/api/project/interface';
 import AudioPlayer from '@/components/AudioPlayer';
+import ImagePlayer from '@/components/ImagePlayer';
+import Pagination from '@/components/Pagination/Pagination';
 import Snakbar from '@/components/Snakbar';
 import styles from '@/styles/app.module.css';
 import { useRouter } from 'next/router';
-import React, { useContext, useEffect, useState } from 'react';
-import ReactAudioPlayer from 'react-audio-player';
-import { Navigation, Pagination } from 'swiper';
+import { useEffect, useState } from 'react';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import { ProjectContext } from './context';
 import { MediaData } from './interface';
 
@@ -65,15 +64,46 @@ function getMainFileName(files: IFile[], mediaType: MediaType) {
     return formatFileName(file, 18);
 }
 
+function getMainFile(files: IFile[], mediaType: MediaType) {
+    let inx: number;
+
+    switch (mediaType) {
+        case MediaType.audio: {
+            inx = files.findIndex((file) => file.type === FileTypeEnum.audio);
+            break;
+        }
+        case MediaType.video: {
+            inx = files.findIndex((file) => file.type === FileTypeEnum.video);
+            break;
+        }
+        case MediaType.panorama: {
+            inx = files.findIndex(
+                (file) => file.type === FileTypeEnum.panorama
+            );
+            break;
+        }
+        case MediaType.pseudo3d: {
+            inx = files.findIndex(
+                (file) => file.type === FileTypeEnum.pseudo3d
+            );
+            break;
+        }
+        case MediaType.image: {
+            inx = files.findIndex((file) => file.type === FileTypeEnum.image);
+            break;
+        }
+    }
+
+    return inx >= 0 ? files[inx] : null;
+}
 
 function getSoundtrackPath(file: MediaData) {
-    if (!file) return null
-    const {files} = file
+    if (!file) return null;
+    const { files } = file;
 
-    if (!files || !files.length) return null
-    const soundtrack = files.find(file => file.type === FileTypeEnum.audio)
-    return soundtrack ? soundtrack : null
-
+    if (!files || !files.length) return null;
+    const soundtrack = files.find((file) => file.type === FileTypeEnum.audio);
+    return soundtrack ? soundtrack : null;
 }
 
 function ProjectDeatil() {
@@ -83,15 +113,8 @@ function ProjectDeatil() {
     const [project, setProject] = useState<IProject>();
     const [refresh, setRefresh] = useState<boolean>(true);
     const [medias, setMedias] = useState<IMedia[]>();
-    const [files, setFiles] = useState<
-        {
-            mediaId: number;
-            mediaType: MediaType;
-            files: IFile[]; // change path here
-            order: number;
-            name: string;
-        }[]
-    >();
+    const [files, setFiles] = useState<MediaData[]>();
+    const [currentMedia, setCurrentMedia] = useState<MediaData>(null);
 
     useEffect(() => {
         if (!router.query.pid || !refresh) return;
@@ -119,7 +142,7 @@ function ProjectDeatil() {
         for (const media of medias) {
             apiFileGet.get(media.id.toString()).then((res) => {
                 setFiles((prevState) => {
-                    const files = res.map(
+                    const newFiles = res.map(
                         // апдейтим файлы при загрузке
                         (file) => {
                             const upgradedFile = {
@@ -130,15 +153,34 @@ function ProjectDeatil() {
                             return upgradedFile;
                         }
                     );
+
+                    const mainFile = getMainFile(newFiles, media.type);
+
                     const newFile = {
                         mediaId: media.id,
                         mediaType: media.type,
                         order: media.order,
-                        name: getMainFileName(files, media.type),
-                        files,
+                        name: getMainFileName(newFiles, media.type),
+                        files: newFiles,
+                        mainFile,
                     };
 
-                    return [...(prevState ?? []), newFile];
+                    const newFilesArr = [...(prevState ?? []), newFile].sort(
+                        (a, b) => a.order - b.order
+                    );
+
+                    let prevOrder = currentMedia?.order
+                    let prev;
+                    for (; prevOrder >= 0; --prevOrder) {
+                        const curr = newFilesArr.find(f => f.order === prevOrder)
+                        
+                        if (!curr) continue;
+                        prev = curr;
+                        break;
+                    }
+                    
+                    setCurrentMedia(prev ?? newFilesArr[0]);
+                    return newFilesArr;
                 });
             });
         }
@@ -156,78 +198,80 @@ function ProjectDeatil() {
             <div className={styles.newProject}>
                 <div className={styles.newProjectTitle}>{project?.name}</div>
 
-                <AudioPlayer soundtrack={getSoundtrackPath(files ? files[0] : null)} mediaId={(files && files[0]?.mediaId) ?? 0} />
+                <AudioPlayer
+                    soundtrack={getSoundtrackPath(
+                        currentMedia ? currentMedia : null
+                    )}
+                    mediaId={(currentMedia && currentMedia?.mediaId) ?? 0}
+                />
                 <div className={styles.newProjectBlock}>
-                    <Swiper
-                        slidesPerView={1}
-                        loop={true}
-                        modules={[Navigation, Pagination]}
-                        navigation
-                        pagination={{ clickable: true }}
-                        className="mySwiper"
-                    >
-                        <SwiperSlide>
-                            <img src="/slider-one.jpg" alt="alt" />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <img src="/slider-one.jpg" alt="alt" />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <img src="/slider-one.jpg" alt="alt" />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <img src="/slider-one.jpg" alt="alt" />
-                        </SwiperSlide>
-                    </Swiper>
+                    {currentMedia &&
+                        currentMedia.mediaType === MediaType.image && (
+                            <ImagePlayer
+                                url={currentMedia && currentMedia.files[0].path}
+                            />
+                        )}
+
+                    {currentMedia &&
+                        currentMedia.mediaType === MediaType.panorama && (
+                            <ImagePlayer
+                                url={currentMedia && currentMedia.files[0].path}
+                            />
+                        )}
+
+                    {currentMedia &&
+                        currentMedia.mediaType === MediaType.audio && (
+                            <ImagePlayer
+                                url={currentMedia && currentMedia.files[0].path}
+                            />
+                        )}
+
+                    {currentMedia &&
+                        currentMedia.mediaType === MediaType.video && (
+                            <ImagePlayer
+                                url={currentMedia && currentMedia.files[0].path}
+                            />
+                        )}
+                    {currentMedia &&
+                        currentMedia.mediaType === MediaType.pseudo3d && (
+                            <ImagePlayer
+                                url={currentMedia && currentMedia.files[0].path}
+                            />
+                        )}
                 </div>
                 <div className={styles.newProjectBlockControls}>
-                    {/* <div className={styles.newProjectSpots}>
-                        <div className={styles.newProjectSpotsName}>Споты</div>
-                        <div className={styles.ProjectSpotsItem}>
-                            <label className={styles.checkboxGoogle}>
-                                <input
-                                    type="checkbox"
-                                    className={styles.checkSwith}
-                                    style={{ zIndex: 1 }}
-                                />
-                                <span
-                                    className={styles.checkboxGoogleSwitch}
-                                ></span>
-                                spot1.jpeg
-                            </label>
-                        </div>
-                        <div className={styles.ProjectSpotsItem}>
-                            <label className={styles.checkboxGoogle}>
-                                <input
-                                    type="checkbox"
-                                    className={styles.checkSwith}
-                                />
-                                <span
-                                    className={styles.checkboxGoogleSwitch}
-                                ></span>
-                                spot1.jpeg
-                            </label>
-                        </div>
-                        <div className={styles.ProjectSpotsItem}>
-                            <label className={styles.checkboxGoogle}>
-                                <input
-                                    type="checkbox"
-                                    className={styles.checkSwith}
-                                />
-                                <span
-                                    className={styles.checkboxGoogleSwitch}
-                                ></span>
-                                spot1.jpeg
-                            </label>
-                        </div>
-                    </div> */}
-                    <div className={styles.btnReposts}>
-                        <button>Поделиться</button>
-                        {/* <button>Редактировать</button> */}
-                    </div>
+                    <Pagination
+                        onSelectMedia={(mediaId: number) => {
+                            const file = files.find(
+                                (f) => f.mediaId === mediaId
+                            );
+                            if (!file) return;
+
+                            setCurrentMedia(file);
+                        }}
+                        items={files}
+                        current={currentMedia}
+                        maxItems={6}
+                    />
+                    {/* <div className={styles.btnReposts}> */}
+                    {/* <button>Поделиться</button> */}
+                    {/* <button>Редактировать</button> */}
+                    {/* </div> */}
                 </div>
                 <div>
-                    <Snakbar files={files} medias={medias} project={project} />
+                    <Snakbar
+                        onSelectMedia={(mediaId: number) => {
+                            const file = files.find(
+                                (f) => f.mediaId === mediaId
+                            );
+                            if (!file) return;
+
+                            setCurrentMedia(file);
+                        }}
+                        files={files}
+                        medias={medias}
+                        project={project}
+                    />
                 </div>
             </div>
         </ProjectContext.Provider>

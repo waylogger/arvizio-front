@@ -33,11 +33,12 @@ export default function SnackbarImage(props: {
     mediaId: number;
     type: MediaType;
     children: ReactNode;
+    onSelectMedia: (mediaId) => void;
     dragHandler: (media: number) => void;
     dropHandler: (media: number) => void;
 }) {
     return (
-        <div>
+        <div onClick={() => props.onSelectMedia(props.mediaId)}>
             <div
                 id={props.mediaId.toString()}
                 onDragStart={(event) => props.dragHandler(props.mediaId)}
@@ -45,12 +46,12 @@ export default function SnackbarImage(props: {
                 onDragLeave={(event) => {
                     event.preventDefault();
                 }}
-                onDragOver={(event) =>  {
-                    event.preventDefault()
+                onDragOver={(event) => {
+                    event.preventDefault();
                 }}
                 onDrop={(event) => {
-                    event.preventDefault()
-                    props.dropHandler(props.mediaId)
+                    event.preventDefault();
+                    props.dropHandler(props.mediaId);
                 }}
                 draggable={true}
                 className={style.snackbarImage}
@@ -60,9 +61,7 @@ export default function SnackbarImage(props: {
             >
                 {props.children}
             </div>
-             <div className={style.imageName}>
-                {props.name}
-             </div>
+            <div className={style.imageName}>{props.name}</div>
         </div>
     );
 }

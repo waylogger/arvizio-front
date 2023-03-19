@@ -6,6 +6,7 @@ import { apiMediaPatch } from '@/api/media/patch';
 import { IProject } from '@/api/project/interface';
 import { UserContext } from '@/context';
 import { ProjectContext } from '@/pages/project-detail/[type]/[pid]/[pname]/context';
+import { MediaData } from '@/pages/project-detail/[type]/[pid]/[pname]/interface';
 import { loadDefaultErrorComponents } from 'next/dist/server/load-components';
 import { useContext, useEffect, useState } from 'react';
 import ElementPopup from '../ElementPopup';
@@ -23,45 +24,40 @@ function findImageForNavigation(files: IFile[]) {
 }
 
 function imageLogo(mediaType: MediaType) {
-    switch(mediaType){
-        case MediaType.panorama:{
-            return '/pano.svg'
+    switch (mediaType) {
+        case MediaType.panorama: {
+            return '/pano.svg';
         }
-        case MediaType.video:{
-            return '/video.svg'
+        case MediaType.video: {
+            return '/video.svg';
         }
-        case MediaType.audio:{
-            return '/audio.svg'
+        case MediaType.audio: {
+            return '/audio.svg';
         }
         case MediaType.model3d:
         case MediaType.pseudo3d: {
-            return '/3d.svg'
+            return '/3d.svg';
         }
-        default: 
-        return '/image.svg'
+        default:
+            return '/image.svg';
     }
 }
 
 function imagePlaceHolder(mediaType: MediaType) {
-    switch(mediaType){
-        case MediaType.audio:{
-            return '/audio-placeholder.jpg'
+    switch (mediaType) {
+        case MediaType.audio: {
+            return '/audio-placeholder.jpg';
         }
-        default: 
-        return '/placeholder.jpg'
-    } 
+        default:
+            return '/placeholder.jpg';
+    }
 }
 
 export default function Snakbar(props: {
     project: IProject;
     medias: IMedia[];
-    files: {
-        name: string;
-        mediaId: number;
-        order: number;
-        mediaType: MediaType;
-        files: IFile[]; // change path here
-    }[];
+    files: MediaData[];
+    onSelectMedia: (mediaId: number) => void;
 }) {
     const [refresh, setRefresh] = useContext<any>(ProjectContext);
     const [loadDialogStatus, setLoadDialogStatus] = useState<'open' | 'close'>(
@@ -153,6 +149,7 @@ export default function Snakbar(props: {
                                 .map((filesOfMedia) => {
                                     return (
                                         <SnackbarImage
+                                            onSelectMedia={props.onSelectMedia}
                                             name={filesOfMedia.name}
                                             dragHandler={(media: number) => {
                                                 setDragMedia(media);
@@ -165,7 +162,10 @@ export default function Snakbar(props: {
                                             url={
                                                 findImageForNavigation(
                                                     filesOfMedia.files
-                                                )?.path ?? imagePlaceHolder(filesOfMedia.mediaType)
+                                                )?.path ??
+                                                imagePlaceHolder(
+                                                    filesOfMedia.mediaType
+                                                )
                                             }
                                             type={filesOfMedia.mediaType}
                                         >

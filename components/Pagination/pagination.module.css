@@ -1,0 +1,53 @@
+
+
+
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.paginationButton{
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.paginationButton:hover{
+    /* color: #04CA6B; */
+    transform: scale(1.1);
+}
+
+
+.paginationButton:hover{
+}
+
+.page {
+
+    height: 40px;
+ 
+    width: 40px;
+    margin-left: 10px;
+    margin-right: 10px;
+    background: transparent;
+    text-align: center;
+    font-size: 16px;
+    font-family: 'Acron';
+    cursor: pointer;
+    border: none;
+
+    box-sizing: border-box;
+    border-radius: 5px;
+
+}
+
+.page:hover{
+    border: 1px solid #04CA6B ; 
+}
+
+.selected{
+    border: 1px solid #04CA6B ;
+
+}
