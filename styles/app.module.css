@@ -563,11 +563,10 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-end;
   margin-top: 20px;
   margin-bottom: 120px;
 }
-.btnReposts button {
+.btnReposts {
   width: 157px;
   height: 44px;
   display: flex;
@@ -584,17 +583,17 @@
   cursor: pointer;
   margin-left: 20px;
 }
-.btnReposts button:hover {
+.btnReposts:hover {
   border: 1px solid #04CA6B;
   background: #04CA6B;
   color: #FFFFFF;
 }
-.btnReposts button:focus {
+.btnReposts:focus {
   border: 1px solid #04CA6B;
   background: #04CA6B;
   color: #FFFFFF;
 }
-.btnReposts button:active {
+.btnReposts:active {
   border: 1px solid #23DE84;
   background: #23DE84;
   color: #FFFFFF;
@@ -1333,7 +1332,7 @@
   }
   .newProjectBlockControls {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
   }
   .btnReposts {
     margin-bottom: 40px;

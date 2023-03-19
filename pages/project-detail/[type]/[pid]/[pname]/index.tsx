@@ -7,14 +7,13 @@ import { apiProjectGet } from '@/api/project/get';
 import { IProject } from '@/api/project/interface';
 import AudioPlayer from '@/components/AudioPlayer';
 import ImagePlayer from '@/components/ImagePlayer';
+import Pagination from '@/components/Pagination/Pagination';
 import Snakbar from '@/components/Snakbar';
 import styles from '@/styles/app.module.css';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { Navigation, Pagination } from 'swiper';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import { ProjectContext } from './context';
 import { MediaData } from './interface';
 
@@ -143,7 +142,7 @@ function ProjectDeatil() {
         for (const media of medias) {
             apiFileGet.get(media.id.toString()).then((res) => {
                 setFiles((prevState) => {
-                    const files = res.map(
+                    const newFiles = res.map(
                         // апдейтим файлы при загрузке
                         (file) => {
                             const upgradedFile = {
@@ -155,35 +154,37 @@ function ProjectDeatil() {
                         }
                     );
 
-                    const mainFile = getMainFile(files, media.type);
+                    const mainFile = getMainFile(newFiles, media.type);
 
                     const newFile = {
                         mediaId: media.id,
                         mediaType: media.type,
                         order: media.order,
-                        name: getMainFileName(files, media.type),
-                        files,
+                        name: getMainFileName(newFiles, media.type),
+                        files: newFiles,
                         mainFile,
                     };
 
                     const newFilesArr = [...(prevState ?? []), newFile].sort(
                         (a, b) => a.order - b.order
                     );
-                    setCurrentMedia(newFilesArr[0]);
+
+                    let prevOrder = currentMedia?.order
+                    let prev;
+                    for (; prevOrder >= 0; --prevOrder) {
+                        const curr = newFilesArr.find(f => f.order === prevOrder)
+                        
+                        if (!curr) continue;
+                        prev = curr;
+                        break;
+                    }
+                    
+                    setCurrentMedia(prev ?? newFilesArr[0]);
                     return newFilesArr;
                 });
             });
         }
     }, [medias]);
-
-    useEffect(() => {
-        // задаем текущий медиа, только если он не задан
-        if (!files || !files.length) return;
-
-        if (currentMedia) return;
-        setCurrentMedia(files[0]);
-    }, [files]);
-
 
     return (
         <ProjectContext.Provider
@@ -239,20 +240,38 @@ function ProjectDeatil() {
                         )}
                 </div>
                 <div className={styles.newProjectBlockControls}>
-                    <div className={styles.btnReposts}>
-                        <button>Поделиться</button>
-                        {/* <button>Редактировать</button> */}
-                    </div>
+                    <Pagination
+                        onSelectMedia={(mediaId: number) => {
+                            const file = files.find(
+                                (f) => f.mediaId === mediaId
+                            );
+                            if (!file) return;
+
+                            setCurrentMedia(file);
+                        }}
+                        items={files}
+                        current={currentMedia}
+                        maxItems={6}
+                    />
+                    {/* <div className={styles.btnReposts}> */}
+                    {/* <button>Поделиться</button> */}
+                    {/* <button>Редактировать</button> */}
+                    {/* </div> */}
                 </div>
                 <div>
-                    <Snakbar onSelectMedia={
-                        (mediaId: number)  => {
-                            const file = files.find(f => f.mediaId === mediaId)
-                            if (!file) return
-                            setCurrentMedia(file)
-                        }
-                    }
-                     files={files} medias={medias} project={project} />
+                    <Snakbar
+                        onSelectMedia={(mediaId: number) => {
+                            const file = files.find(
+                                (f) => f.mediaId === mediaId
+                            );
+                            if (!file) return;
+
+                            setCurrentMedia(file);
+                        }}
+                        files={files}
+                        medias={medias}
+                        project={project}
+                    />
                 </div>
             </div>
         </ProjectContext.Provider>

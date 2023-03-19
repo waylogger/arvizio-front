@@ -15,7 +15,6 @@ export default function audioPlayer(props: {
 }) {
     const [refresh, setRefresh] = useContext(ProjectContext);
 
-    
     return (
         <div className={appStyles.newProjectControls}>
             <div className={appStyles.newProjectControlsBtn}>
@@ -53,7 +52,7 @@ export default function audioPlayer(props: {
             {props.soundtrack && (
                 <ReactAudioPlayer
                     src={props?.soundtrack?.path ?? ''}
-                    autoPlay
+                    // autoPlay
                     controls
                     preload="auto"
                 />
@@ -71,7 +70,6 @@ export default function audioPlayer(props: {
                     const arr = Array.from(files);
 
                     const file = arr[0];
-
                     apiFileCreate
                         .createAndUpload(
                             props.mediaId,
@@ -80,6 +78,8 @@ export default function audioPlayer(props: {
                             file
                         )
                         .then((res) => setRefresh(true));
+
+                    event.target.value = null;
                 }}
             />
         </div>
