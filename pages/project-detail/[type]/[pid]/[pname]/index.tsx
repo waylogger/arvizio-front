@@ -11,7 +11,7 @@ import Pagination from '@/components/Pagination/Pagination';
 import Snakbar from '@/components/Snakbar';
 import styles from '@/styles/app.module.css';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { ProjectContext } from './context';
@@ -132,17 +132,27 @@ function ProjectDeatil() {
         if (!project) return;
 
         apiMediaGet.get(project.id.toString()).then((res) => {
-            setMedias(res);
+            setMedias(res.sort((a, b) => a.order - b.order));
         });
     }, [project]);
 
     useEffect(() => {
         if (!medias) return;
         setFiles(null);
+        const promises = [];
         for (const media of medias) {
-            apiFileGet.get(media.id.toString()).then((res) => {
+            promises.push(
+                apiFileGet.get(media.id.toString()).then((res) => res)
+            );
+        }
+        Promise.all(promises).then((res) => {
+            let i = 0;
+            for (const media of medias) {
+                const filesOfMedia = res[i];
+                ++i;
                 setFiles((prevState) => {
-                    const newFiles = res.map(
+
+                    const newFiles = filesOfMedia.map(
                         // апдейтим файлы при загрузке
                         (file) => {
                             const upgradedFile = {
@@ -168,23 +178,37 @@ function ProjectDeatil() {
                     const newFilesArr = [...(prevState ?? []), newFile].sort(
                         (a, b) => a.order - b.order
                     );
-
-                    let prevOrder = currentMedia?.order
-                    let prev;
-                    for (; prevOrder >= 0; --prevOrder) {
-                        const curr = newFilesArr.find(f => f.order === prevOrder)
-                        
-                        if (!curr) continue;
-                        prev = curr;
-                        break;
-                    }
-                    
-                    setCurrentMedia(prev ?? newFilesArr[0]);
                     return newFilesArr;
                 });
-            });
-        }
+            }
+        });
     }, [medias]);
+
+    useEffect(() => {
+        console.log({
+            action: 'change files',
+            files: files?.length,
+        });
+        if (!files) return;
+        let prevOrder = currentMedia?.order;
+        let prev;
+        for (; prevOrder >= 0; --prevOrder) {
+            const curr = files.find((f) => f.order === prevOrder);
+
+            if (!curr) continue;
+            prev = curr;
+            break;
+        }
+
+        setCurrentMedia(prev ?? files[0]);
+    }, [files]);
+
+    useEffect(() => {
+        console.log({
+            action: 'current media changed',
+            currentMedia: JSON.stringify(currentMedia),
+        });
+    }, [currentMedia]);
 
     return (
         <ProjectContext.Provider
@@ -246,6 +270,8 @@ function ProjectDeatil() {
                                 (f) => f.mediaId === mediaId
                             );
                             if (!file) return;
+
+                            if (file === currentMedia) return;
 
                             setCurrentMedia(file);
                         }}

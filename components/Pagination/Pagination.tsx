@@ -11,18 +11,15 @@ export default function Pagination(props: {
     items: MediaData[];
 }) {
     const clickOnNumber = (event) => {
-        setEventSource('click');
         const item = event.target.innerText;
         setCurrentItem(parseInt(item));
     };
     const clickOnNext = (event) => {
-        setEventSource('click');
         setCurrentItem((prev) => {
             return prev === items[items.length - 1] ? prev : prev + 1;
         });
     };
     const clickOnPrev = (event) => {
-        setEventSource('click');
         setCurrentItem((prev) => {
             return prev === items[0] ? prev : prev - 1;
         });
@@ -31,13 +28,10 @@ export default function Pagination(props: {
     const [currentItem, setCurrentItem] = useState<number>(0);
     const [firstVisible, setFirstVisible] = useState<number>(0);
     const [lastVisible, setLastVisible] = useState<number>(0);
-    const [eventSource, setEventSource] = useState<'click' | null>(null);
+
     useEffect(() => {
         setFirstVisible(0);
         setLastVisible(props.maxItems);
-        document.addEventListener('click', () => {
-            setEventSource(null);
-        });
     }, [props.maxItems]);
 
     useEffect(() => {
@@ -84,9 +78,7 @@ export default function Pagination(props: {
 
         if (select === current) return;
         // обновляем только после клика
-        if (eventSource !== 'click') return;
 
-        setEventSource(null);
         props.onSelectMedia(select);
     }, [currentItem]);
 
