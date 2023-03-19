@@ -15,6 +15,7 @@ export default function audioPlayer(props: {
 }) {
     const [refresh, setRefresh] = useContext(ProjectContext);
 
+    
     return (
         <div className={appStyles.newProjectControls}>
             <div className={appStyles.newProjectControlsBtn}>
