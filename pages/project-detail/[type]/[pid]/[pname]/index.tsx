@@ -5,6 +5,7 @@ import { apiMediaGet } from '@/api/media/get';
 import { IMedia, MediaType } from '@/api/media/interface';
 import { apiProjectGet } from '@/api/project/get';
 import { IProject } from '@/api/project/interface';
+import Player360 from '@/components/360Player';
 import AudioPlayer from '@/components/AudioPlayer';
 import ImagePlayer from '@/components/ImagePlayer';
 import Pagination from '@/components/Pagination/Pagination';
@@ -185,10 +186,6 @@ function ProjectDeatil() {
     }, [medias]);
 
     useEffect(() => {
-        console.log({
-            action: 'change files',
-            files: files?.length,
-        });
         if (!files) return;
         let prevOrder = currentMedia?.order;
         let prev;
@@ -203,12 +200,6 @@ function ProjectDeatil() {
         setCurrentMedia(prev ?? files[0]);
     }, [files]);
 
-    useEffect(() => {
-        console.log({
-            action: 'current media changed',
-            currentMedia: JSON.stringify(currentMedia),
-        });
-    }, [currentMedia]);
 
     return (
         <ProjectContext.Provider
@@ -238,8 +229,8 @@ function ProjectDeatil() {
 
                     {currentMedia &&
                         currentMedia.mediaType === MediaType.panorama && (
-                            <ImagePlayer
-                                url={currentMedia && currentMedia.files[0].path}
+                            <Player360 file={currentMedia}
+                                // url={currentMedia && currentMedia.files[0].path}
                             />
                         )}
 
