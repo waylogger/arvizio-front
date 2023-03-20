@@ -10,4 +10,5 @@ export interface MediaData {
     order: number;
     name: string;
     spots: ISpot[];
+    numberOfLines: number;
 }

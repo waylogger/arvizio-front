@@ -3,7 +3,7 @@ import axios from 'axios';
 import { IMedia } from '../interface';
 
 export class ApiMediaPatch extends ApiClientAbstract {
-    async patch(id: number, order: number): Promise<IMedia[]> {
+    async patch(id: number, order?: number, settings?: any): Promise<IMedia[]> {
         try {
             const url = `${this.backend}/media`;
             const medias = await axios
@@ -12,6 +12,7 @@ export class ApiMediaPatch extends ApiClientAbstract {
                     {
                         id,
                         order,
+                        settings,
                     },
                     this.options()
                 )

@@ -30,11 +30,9 @@ export interface IMedia {
 
     order: number;
 
-    settings:
-        | {
-              [key: string]: any;
-          }
-        | string;
+    settings: {
+        numberOfLines: number;
+    };
 }
 
 export enum MediaType {

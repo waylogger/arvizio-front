@@ -21,8 +21,12 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { ProjectContext } from './context';
 import { MediaData } from './interface';
+import P3DPlayer from '@/components/P3DPlayer';
+import MyModal from '@/components/UI/MyModal/MyModal';
+import EditPopup from '@/components/EditPopup';
 
 export function formatFileName(name: string, maxLength: number) {
+    if (!name) return '';
     const len = name.length;
     if (len <= maxLength) return name;
 
@@ -121,6 +125,7 @@ function ProjectDeatil() {
     const [files, setFiles] = useState<MediaData[]>();
     const [spots, setSpots] = useState<ISpot[]>();
     const [currentMedia, setCurrentMedia] = useState<MediaData>(null);
+    const [editModal, setEditModal] = useState<boolean>(false);
 
     useEffect(() => {
         if (!router.query.pid || !refresh) return;
@@ -181,13 +186,14 @@ function ProjectDeatil() {
 
                     const mainFile = getMainFile(newFiles, media.type);
 
-                    const newFile = {
+                    const newFile: MediaData = {
                         mediaId: media.id,
                         mediaType: media.type,
                         order: media.order,
                         name: getMainFileName(newFiles, media.type),
                         files: newFiles,
                         mainFile,
+                        numberOfLines: media.settings.numberOfLines,
                         spots:
                             spots?.filter(
                                 (spot) => spot.source.id === media.id
@@ -227,20 +233,34 @@ function ProjectDeatil() {
                 },
             ]}
         >
-            <div className={styles.newProject} style={{
-                    height: currentMedia?.mediaType === MediaType.audio ? '880px' : '800px'
-                }} >
+            <div
+                className={styles.newProject}
+                style={{
+                    height:
+                        currentMedia?.mediaType === MediaType.audio
+                            ? '880px'
+                            : '800px',
+                }}
+            >
                 <div className={styles.newProjectTitle}>{project?.name}</div>
 
-                {currentMedia?.mediaType !== MediaType.audio && < AudioPlayerOnTop
-                    soundtrack={getSoundtrackPath(
-                        currentMedia ? currentMedia : null
-                    )}
-                    mediaId={(currentMedia && currentMedia?.mediaId) ?? 0}
-                />}
-                <div className={styles.newProjectBlock} style={{
-                    height: currentMedia?.mediaType === MediaType.audio ? '550px' : '470px'
-                }}>
+                {currentMedia?.mediaType !== MediaType.audio && (
+                    <AudioPlayerOnTop
+                        soundtrack={getSoundtrackPath(
+                            currentMedia ? currentMedia : null
+                        )}
+                        mediaId={(currentMedia && currentMedia?.mediaId) ?? 0}
+                    />
+                )}
+                <div
+                    className={styles.newProjectBlock}
+                    style={{
+                        height:
+                            currentMedia?.mediaType === MediaType.audio
+                                ? '550px'
+                                : '470px',
+                    }}
+                >
                     {currentMedia &&
                         currentMedia.mediaType === MediaType.image && (
                             <ImagePlayer
@@ -276,8 +296,9 @@ function ProjectDeatil() {
                         )}
                     {currentMedia &&
                         currentMedia.mediaType === MediaType.pseudo3d && (
-                            <ImagePlayer
-                                url={currentMedia && currentMedia.files[0].path}
+                            <P3DPlayer
+                                current={currentMedia}
+                                needToRefresh={editModal === false}
                             />
                         )}
                 </div>
@@ -297,10 +318,15 @@ function ProjectDeatil() {
                         current={currentMedia}
                         maxItems={6}
                     />
-                    {/* <div className={styles.btnReposts}> */}
-                    {/* <button>Поделиться</button> */}
-                    {/* <button>Редактировать</button> */}
-                    {/* </div> */}
+                    <div className={styles.ruleButtons}>
+                        <span
+                            onClick={() => setEditModal(true)}
+                            className={styles.btnReposts}
+                        >
+                            Редактировать
+                        </span>
+                        <span className={styles.btnReposts}>Поделиться</span>
+                    </div>
                 </div>
 
                 <div className="menu">
@@ -323,6 +349,12 @@ function ProjectDeatil() {
                         project={project}
                     />
                 </div>
+                <MyModal visible={editModal} setVisible={setEditModal}>
+                    <EditPopup
+                        setModal={() => setEditModal(false)}
+                        current={currentMedia}
+                    />
+                </MyModal>
             </div>
         </ProjectContext.Provider>
     );
