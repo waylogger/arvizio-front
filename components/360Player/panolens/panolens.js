@@ -9208,9 +9208,7 @@ if (typeof window !== undefined) {
 
         window.TWEEN = Tween;
     }
-    catch(e){
-        console.warn(e)
-    }
+    catch(e){}
 }
 
 export {

@@ -2,10 +2,9 @@ import axios from 'axios';
 import { ApiClientAbstract } from '../../api-client-abstract';
 import { ISpot } from '../interface';
 
-class SpotClientCreate extends ApiClientAbstract {
+class SpotClientPatch extends ApiClientAbstract {
     create(
-        source: number,
-        target: number,
+        id: number,
         x: number,
         y: number,
         z: number = -800
@@ -14,11 +13,10 @@ class SpotClientCreate extends ApiClientAbstract {
 
         try {
             return axios
-                .post(
+                .patch(
                     url,
                     {
-                        target,
-                        source,
+                        id,
                         x,
                         y,
                         z,
@@ -32,4 +30,4 @@ class SpotClientCreate extends ApiClientAbstract {
     }
 }
 
-export const apiSpotCreate = new SpotClientCreate();
+export const apiSpotPatch = new SpotClientPatch();
