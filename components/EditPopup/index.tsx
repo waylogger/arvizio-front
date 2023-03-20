@@ -1,7 +1,7 @@
 import { FileTypeEnum, IFile } from '@/api/file/interface';
 import { apiFilePatch } from '@/api/file/patch';
 import { apiMediaPatch } from '@/api/media/patch';
-import { MediaData } from '@/pages/project-detail/[type]/[pid]/[pname]/interface';
+import MediaData  from '@/types/interface';
 import styles from '@/styles/app.module.css';
 
 import { useEffect, useState } from 'react';

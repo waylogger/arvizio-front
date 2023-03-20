@@ -5,7 +5,7 @@ import GalleryPopup from '@/components/GalleryPopup';
 import TPopup from '@/components/TPopup';
 import D3Popup from '@/components/D3Popup';
 import PD3Popup from '@/components/PD3Popup';
-import { UserContext } from '@/context';
+import { UserContext } from '@/context/user-context';
 import { useRouter } from 'next/router';
 
 function NewProject() {

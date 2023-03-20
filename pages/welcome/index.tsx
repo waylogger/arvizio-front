@@ -1,7 +1,7 @@
 import Login from "@/components/Login";
 import Registration from "@/components/Registration";
 import MyModal from "@/components/UI/MyModal/MyModal";
-import { UserContext } from '@/context';
+import { UserContext } from '@/context/user-context';
 import styles from "@/styles/app.module.css";
 import { useRouter } from 'next/router';
 import React, { useContext, useDebugValue, useEffect } from 'react';

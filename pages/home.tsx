@@ -1,4 +1,4 @@
-import { UserContext } from '@/context';
+import { UserContext } from '@/context/user-context';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useContext, useEffect } from 'react';

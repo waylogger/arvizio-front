@@ -2,7 +2,7 @@ import { api } from '@/api/api-client';
 import { config } from '@/api/cfg';
 import { ApiMethodsEnum } from '@/api/interface';
 import MyModal from '@/components/UI/MyModal/MyModal';
-import { UserContext } from '@/context';
+import { UserContext } from '@/context/user-context';
 import styles from '@/styles/app.module.css';
 import Link from 'next/link';
 import React, { useContext, useState } from 'react';

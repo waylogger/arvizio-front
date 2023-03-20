@@ -3,7 +3,7 @@ import ReactAudioPlayer from 'react-audio-player';
 import appStyles from '@/styles/app.module.css';
 import FileInput from '../UI/FileInput';
 import { useContext, useState } from 'react';
-import { ProjectContext } from '@/pages/project-detail/[type]/[pid]/[pname]/context';
+import ProjectContext  from '@/context/project-context';
 import { apiFileCreate } from '@/api/file/create';
 import { FileTypeEnum, IFile } from '@/api/file/interface';
 import { formatFileName } from '@/pages/project-detail/[type]/[pid]/[pname]';

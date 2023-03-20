@@ -1,5 +1,5 @@
 import { FileTypeEnum } from '@/api/file/interface';
-import { MediaData } from '@/pages/project-detail/[type]/[pid]/[pname]/interface';
+import  MediaData  from '@/types/interface';
 import ReactPlayer from 'react-player';
 
 export default function VideoPlayer(props: { current: MediaData }) {

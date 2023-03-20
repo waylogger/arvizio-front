@@ -1,5 +1,5 @@
 import { api } from '@/api/api-client';
-import { UserContext } from '@/context';
+import { UserContext } from '@/context/user-context';
 import { useContext } from 'react';
 import styles from '../styles/app.module.css';
 

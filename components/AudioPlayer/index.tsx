@@ -1,14 +1,7 @@
 import ReactAudioPlayer from 'react-audio-player';
 
-import appStyles from '@/styles/app.module.css';
-import FileInput from '../UI/FileInput';
-import { useContext, useState } from 'react';
-import { ProjectContext } from '@/pages/project-detail/[type]/[pid]/[pname]/context';
-import { apiFileCreate } from '@/api/file/create';
-import { FileTypeEnum, IFile } from '@/api/file/interface';
-import { formatFileName } from '@/pages/project-detail/[type]/[pid]/[pname]';
-import { apiFileDelete } from '@/api/file/delete';
-import { MediaData } from '@/pages/project-detail/[type]/[pid]/[pname]/interface';
+import { FileTypeEnum } from '@/api/file/interface';
+import MediaData from '@/types/interface';
 
 export default function audioPlayer(props: { current: MediaData }) {
     const getMain = () => {

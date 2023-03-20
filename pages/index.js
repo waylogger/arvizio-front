@@ -1,7 +1,7 @@
 
 import { useRouter } from 'next/router';
 import { useContext, useEffect } from 'react';
-import {UserContext} from '../context'
+import {UserContext} from '../context/user-context'
 import Welcome from './welcome'
 
 

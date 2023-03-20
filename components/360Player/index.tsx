@@ -1,4 +1,4 @@
-import { MediaData } from '@/pages/project-detail/[type]/[pid]/[pname]/interface';
+import  MediaData  from '@/types/interface';
 import { useEffect, useState } from 'react';
 
 import { FileTypeEnum } from '@/api/file/interface';

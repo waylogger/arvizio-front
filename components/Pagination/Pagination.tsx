@@ -1,5 +1,4 @@
-import { MediaData } from '@/pages/project-detail/[type]/[pid]/[pname]/interface';
-import { isResSent } from 'next/dist/shared/lib/utils';
+import MediaData from '@/types/interface';
 import { useEffect, useState } from 'react';
 
 import styles from './pagination.module.css';

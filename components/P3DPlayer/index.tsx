@@ -1,5 +1,5 @@
 import { FileTypeEnum, IFile } from '@/api/file/interface';
-import { MediaData } from '@/pages/project-detail/[type]/[pid]/[pname]/interface';
+import  MediaData from '@/types/interface';
 import { SyntheticEvent, useEffect, useState } from 'react';
 import style from './image-player.module.css';
 

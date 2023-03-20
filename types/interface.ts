@@ -2,7 +2,7 @@ import { IFile } from '@/api/file/interface';
 import { MediaType } from '@/api/media/interface';
 import { ISpot } from '@/api/spot/interface';
 
-export interface MediaData {
+export default interface MediaData {
     mediaId: number;
     mediaType: MediaType;
     mainFile: IFile;

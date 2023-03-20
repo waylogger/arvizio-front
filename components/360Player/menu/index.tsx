@@ -2,8 +2,8 @@ import { FileTypeEnum } from '@/api/file/interface';
 import { apiSpotCreate } from '@/api/spot/create';
 import { apiSpotDelete } from '@/api/spot/delete';
 import { formatFileName } from '@/pages/project-detail/[type]/[pid]/[pname]';
-import { ProjectContext } from '@/pages/project-detail/[type]/[pid]/[pname]/context';
-import { MediaData } from '@/pages/project-detail/[type]/[pid]/[pname]/interface';
+import ProjectContext  from '@/context/project-context';
+import MediaData  from '@/types/interface';
 import styles from '@/styles/app.module.css';
 import { useContext } from 'react';
 
