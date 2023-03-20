@@ -319,7 +319,7 @@ function ProjectDeatil() {
                         maxItems={6}
                     />
 
-                    {project.type === ProjectType.pseudo3d && (
+                    {project?.type === ProjectType.pseudo3d && (
                         <div className={styles.ruleButtons}>
                             <span
                                 onClick={() => setEditModal(true)}
