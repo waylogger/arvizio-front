@@ -8,79 +8,34 @@ import { apiFileCreate } from '@/api/file/create';
 import { FileTypeEnum, IFile } from '@/api/file/interface';
 import { formatFileName } from '@/pages/project-detail/[type]/[pid]/[pname]';
 import { apiFileDelete } from '@/api/file/delete';
+import { MediaData } from '@/pages/project-detail/[type]/[pid]/[pname]/interface';
 
-export default function audioPlayer(props: {
-    soundtrack: IFile | null;
-    mediaId: number;
-}) {
-    const [refresh, setRefresh] = useContext(ProjectContext);
-
+export default function audioPlayer(props: { current: MediaData }) {
+    const getMain = () => {
+        const file = props?.current?.files?.find(
+            (f) => f.type === FileTypeEnum.audio
+        );
+        return file?.path;
+    };
     return (
-        <div className={appStyles.newProjectControls}>
-            <div className={appStyles.newProjectControlsBtn}>
-                {props.soundtrack ? (
-                    <button
-                        className={appStyles.ControlsDelete}
-                        onClick={() => {
-                            apiFileDelete
-                                .delete(props.soundtrack.id.toString())
-                                .then((res) => setRefresh(true));
-                        }}
-                    >
-                        <img src="/delete.svg" alt="" />
-                    </button>
-                ) : (
-                    <button
-                        className={appStyles.ControlsDelete}
-                        onClick={() => {
-                            const inp = document.getElementById(
-                                `input-audio-${props.mediaId}`
-                            );
-                            inp.click();
-                        }}
-                    >
-                        <img src="/add.svg" alt="" />
-                    </button>
-                )}
-            </div>
-            <div className={appStyles.ControlsAudioName}>
-                {props.soundtrack
-                    ? formatFileName(props.soundtrack.name, 18)
-                    : 'Загрузите саундтрек'}
-            </div>
+        <div style={{
+            height: '100%',
+            width: '100%',
+            backgroundImage: `url('/types/audio.png')`,
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'flex-end',
+            padding: '20px',
+            boxSizing: 'border-box',
 
-            {props.soundtrack && (
-                <ReactAudioPlayer
-                    src={props?.soundtrack?.path ?? ''}
-                    // autoPlay
-                    controls
-                    preload="auto"
-                />
-            )}
-            <input
-                type="file"
-                accept="audio/mp3"
-                id={`input-audio-${props.mediaId}`}
-                multiple={false}
-                style={{
-                    display: 'none',
-                }}
-                onChange={(event) => {
-                    const files = event.target.files;
-                    const arr = Array.from(files);
-
-                    const file = arr[0];
-                    apiFileCreate
-                        .createAndUpload(
-                            props.mediaId,
-                            FileTypeEnum.audio,
-                            file.name,
-                            file
-                        )
-                        .then((res) => setRefresh(true));
-
-                    event.target.value = null;
-                }}
+        }}> 
+            <ReactAudioPlayer
+                src={getMain() ?? ''}
+                // autoPlay
+                controls
+                preload="auto"
             />
         </div>
     );

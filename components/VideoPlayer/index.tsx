@@ -9,5 +9,12 @@ export default function VideoPlayer(props: { current: MediaData }) {
         );
         return videoFile;
     };
-    return <ReactPlayer url={getMailFile().path ?? ''} />;
+    return (
+        <ReactPlayer
+            url={getMailFile().path ?? ''}
+            controls={true}
+            width="100%"
+            height="100%"
+        />
+    );
 }
