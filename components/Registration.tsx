@@ -3,6 +3,9 @@ import MyButton from "./UI/MyButton/MyButton";
 import styles from "@/styles/app.module.css";
 import React, {useState} from "react";
 import { api } from '@/api/api-client';
+import Link from 'next/link';
+import { ApiMethodsEnum } from '@/api/interface';
+import { config } from '@/api/cfg';
 
 
 
@@ -114,9 +117,36 @@ const Registration = (props: { setModal: (status: boolean) => void})  => {
             <div className={styles.formSocial}>
                 <div className={styles.formSocialSpan}>Регистрация через</div>
                 <div className={styles.formSocialButtons}>
-                    <button className={styles.formSocialBtn}><img src="/google.svg" /></button>
-                    <button className={styles.formSocialBtn}><img src="/vk.svg" /></button>
-                    <button className={styles.formSocialBtn}><img src="/yandex.svg" /></button>
+                <Link
+                        href={[
+                            config.url.backend,
+                            ApiMethodsEnum.googlePath,
+                        ].join('/')}
+                    >
+                        <button className={styles.formSocialBtn}>
+                            <img src="/google.svg" />
+                        </button>
+                    </Link>
+                    <Link
+                        href={[
+                            config.url.backend,
+                            ApiMethodsEnum.vkPath,
+                        ].join('/')}
+                    >
+                        <button className={styles.formSocialBtn}>
+                            <img src="/vk.svg" />
+                        </button>
+                    </Link>
+                    <Link
+                        href={[
+                            config.url.backend,
+                            ApiMethodsEnum.yaPath,
+                        ].join('/')}
+                    >
+                        <button className={styles.formSocialBtn}>
+                            <img src="/yandex.svg" />
+                        </button>
+                    </Link>
                 </div>
             </div>
         </div>
