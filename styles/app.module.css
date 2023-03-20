@@ -541,9 +541,10 @@
 }
 .newProjectBlockControls {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  ;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: flex-end;
   align-content: flex-end;
 }
 .newProjectSpots {
@@ -567,6 +568,10 @@
   align-items: center;
   margin-top: 20px;
   margin-bottom: 120px;
+}
+.ruleButtons{
+  display: flex;
+  user-select: none;
 }
 .btnReposts {
   width: 157px;
