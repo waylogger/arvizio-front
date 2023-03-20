@@ -4,16 +4,18 @@ import { FileTypeEnum, IFile } from '@/api/file/interface';
 import { apiMediaGet } from '@/api/media/get';
 import { IMedia, MediaType } from '@/api/media/interface';
 import { apiProjectGet } from '@/api/project/get';
-import { IProject } from '@/api/project/interface';
+import { IProject, ProjectType } from '@/api/project/interface';
+import { apiSpotGet } from '@/api/spot/get';
+import { ISpot } from '@/api/spot/interface';
+import Player360 from '@/components/360Player';
+import Menu360Player from '@/components/360Player/menu';
 import AudioPlayer from '@/components/AudioPlayer';
 import ImagePlayer from '@/components/ImagePlayer';
 import Pagination from '@/components/Pagination/Pagination';
 import Snakbar from '@/components/Snakbar';
 import styles from '@/styles/app.module.css';
 import { useRouter } from 'next/router';
-import { useEffect, useReducer, useState } from 'react';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import { useEffect, useState } from 'react';
 import { ProjectContext } from './context';
 import { MediaData } from './interface';
 
@@ -114,18 +116,29 @@ function ProjectDeatil() {
     const [refresh, setRefresh] = useState<boolean>(true);
     const [medias, setMedias] = useState<IMedia[]>();
     const [files, setFiles] = useState<MediaData[]>();
+    const [spots, setSpots] = useState<ISpot[]>();
     const [currentMedia, setCurrentMedia] = useState<MediaData>(null);
 
     useEffect(() => {
         if (!router.query.pid || !refresh) return;
 
         setProjectId(router.query.pid as string);
-        apiProjectGet
-            .getSingleProject(parseInt(router.query.pid as string))
-            .then((res) => setProject(res ? res[0] : null))
-            .then((res) => {
-                if (refresh) setRefresh(false);
-            });
+
+        const promises = [];
+        promises.push(
+            apiProjectGet
+                .getSingleProject(parseInt(router.query.pid as string))
+                .then((res) => setProject(res ? res[0] : null))
+        );
+        if (router.query.pid)
+            promises.push(apiSpotGet.getAll(router.query.pid as string));
+
+        Promise.all(promises).then((res) => {
+            const [project, spots] = res;
+            if (spots && spots.length) setSpots(spots);
+            if (project && project[0]) setProject(project);
+            if (refresh) setRefresh(false);
+        });
     }, [router.query.pid, refresh]);
 
     useEffect(() => {
@@ -151,7 +164,6 @@ function ProjectDeatil() {
                 const filesOfMedia = res[i];
                 ++i;
                 setFiles((prevState) => {
-
                     const newFiles = filesOfMedia.map(
                         // апдейтим файлы при загрузке
                         (file) => {
@@ -173,7 +185,10 @@ function ProjectDeatil() {
                         name: getMainFileName(newFiles, media.type),
                         files: newFiles,
                         mainFile,
+                        spots: spots?.filter((spot) => spot.source.id === media.id) ?? [],
                     };
+                   
+                    
 
                     const newFilesArr = [...(prevState ?? []), newFile].sort(
                         (a, b) => a.order - b.order
@@ -185,10 +200,6 @@ function ProjectDeatil() {
     }, [medias]);
 
     useEffect(() => {
-        console.log({
-            action: 'change files',
-            files: files?.length,
-        });
         if (!files) return;
         let prevOrder = currentMedia?.order;
         let prev;
@@ -202,13 +213,6 @@ function ProjectDeatil() {
 
         setCurrentMedia(prev ?? files[0]);
     }, [files]);
-
-    useEffect(() => {
-        console.log({
-            action: 'current media changed',
-            currentMedia: JSON.stringify(currentMedia),
-        });
-    }, [currentMedia]);
 
     return (
         <ProjectContext.Provider
@@ -238,8 +242,18 @@ function ProjectDeatil() {
 
                     {currentMedia &&
                         currentMedia.mediaType === MediaType.panorama && (
-                            <ImagePlayer
-                                url={currentMedia && currentMedia.files[0].path}
+                            <Player360
+                                setCurrentMedia={(mediaId:number)=>{
+                                    const file = files.find(
+                                        (f) => f.mediaId === mediaId
+                                    );
+                                    if (!file) return;
+        
+                                    if (file === currentMedia) return;
+       
+                                    setCurrentMedia(file); 
+                                }}
+                                file={currentMedia}
                             />
                         )}
 
@@ -283,6 +297,12 @@ function ProjectDeatil() {
                     {/* <button>Поделиться</button> */}
                     {/* <button>Редактировать</button> */}
                     {/* </div> */}
+                </div>
+
+                <div className="menu">
+                    {project?.type === ProjectType.pano && (
+                        <Menu360Player files={files} current={currentMedia} />
+                    )}
                 </div>
                 <div>
                     <Snakbar
