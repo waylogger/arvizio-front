@@ -9,10 +9,13 @@ import { apiSpotGet } from '@/api/spot/get';
 import { ISpot } from '@/api/spot/interface';
 import Player360 from '@/components/360Player';
 import Menu360Player from '@/components/360Player/menu';
+import AudioPlayerOnTop from '@/components/AudioPlayerOnTop';
 import AudioPlayer from '@/components/AudioPlayer';
+
 import ImagePlayer from '@/components/ImagePlayer';
 import Pagination from '@/components/Pagination/Pagination';
 import Snakbar from '@/components/Snakbar';
+import VideoPlayer from '@/components/VideoPlayer';
 import styles from '@/styles/app.module.css';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -185,10 +188,11 @@ function ProjectDeatil() {
                         name: getMainFileName(newFiles, media.type),
                         files: newFiles,
                         mainFile,
-                        spots: spots?.filter((spot) => spot.source.id === media.id) ?? [],
+                        spots:
+                            spots?.filter(
+                                (spot) => spot.source.id === media.id
+                            ) ?? [],
                     };
-                   
-                    
 
                     const newFilesArr = [...(prevState ?? []), newFile].sort(
                         (a, b) => a.order - b.order
@@ -223,16 +227,20 @@ function ProjectDeatil() {
                 },
             ]}
         >
-            <div className={styles.newProject}>
+            <div className={styles.newProject} style={{
+                    height: currentMedia?.mediaType === MediaType.audio ? '880px' : '800px'
+                }} >
                 <div className={styles.newProjectTitle}>{project?.name}</div>
 
-                <AudioPlayer
+                {currentMedia?.mediaType !== MediaType.audio && < AudioPlayerOnTop
                     soundtrack={getSoundtrackPath(
                         currentMedia ? currentMedia : null
                     )}
                     mediaId={(currentMedia && currentMedia?.mediaId) ?? 0}
-                />
-                <div className={styles.newProjectBlock}>
+                />}
+                <div className={styles.newProjectBlock} style={{
+                    height: currentMedia?.mediaType === MediaType.audio ? '550px' : '470px'
+                }}>
                     {currentMedia &&
                         currentMedia.mediaType === MediaType.image && (
                             <ImagePlayer
@@ -243,15 +251,15 @@ function ProjectDeatil() {
                     {currentMedia &&
                         currentMedia.mediaType === MediaType.panorama && (
                             <Player360
-                                setCurrentMedia={(mediaId:number)=>{
+                                setCurrentMedia={(mediaId: number) => {
                                     const file = files.find(
                                         (f) => f.mediaId === mediaId
                                     );
                                     if (!file) return;
-        
+
                                     if (file === currentMedia) return;
-       
-                                    setCurrentMedia(file); 
+
+                                    setCurrentMedia(file);
                                 }}
                                 file={currentMedia}
                             />
@@ -259,16 +267,12 @@ function ProjectDeatil() {
 
                     {currentMedia &&
                         currentMedia.mediaType === MediaType.audio && (
-                            <ImagePlayer
-                                url={currentMedia && currentMedia.files[0].path}
-                            />
+                            <AudioPlayer current={currentMedia} />
                         )}
 
                     {currentMedia &&
                         currentMedia.mediaType === MediaType.video && (
-                            <ImagePlayer
-                                url={currentMedia && currentMedia.files[0].path}
-                            />
+                            <VideoPlayer current={currentMedia} />
                         )}
                     {currentMedia &&
                         currentMedia.mediaType === MediaType.pseudo3d && (
