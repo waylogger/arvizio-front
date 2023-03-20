@@ -19,8 +19,8 @@ import VideoPlayer from '@/components/VideoPlayer';
 import styles from '@/styles/app.module.css';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import  ProjectContext from '../../../../../context/project-context';
-import  MediaData  from '../../../../../types/interface';
+import ProjectContext from '../../../../../context/project-context';
+import MediaData from '../../../../../types/interface';
 import P3DPlayer from '@/components/P3DPlayer';
 import MyModal from '@/components/UI/MyModal/MyModal';
 import EditPopup from '@/components/EditPopup';
@@ -318,15 +318,20 @@ function ProjectDeatil() {
                         current={currentMedia}
                         maxItems={6}
                     />
-                    <div className={styles.ruleButtons}>
-                        <span
-                            onClick={() => setEditModal(true)}
-                            className={styles.btnReposts}
-                        >
-                            Редактировать
-                        </span>
-                        <span className={styles.btnReposts}>Поделиться</span>
-                    </div>
+
+                    {project.type === ProjectType.pseudo3d && (
+                        <div className={styles.ruleButtons}>
+                            <span
+                                onClick={() => setEditModal(true)}
+                                className={styles.btnReposts}
+                            >
+                                Редактировать
+                            </span>
+                            {/* <span className={styles.btnReposts}>
+                                Поделиться
+                            </span> */}
+                        </div>
+                    )}
                 </div>
 
                 <div className="menu">

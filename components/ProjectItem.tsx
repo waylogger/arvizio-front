@@ -39,7 +39,7 @@ const ProjectItem = (props: { project: IProject; inx: number }) => {
         <div className={styles.libraryProjectItem} style={{ display }}>
             <div className={styles.ProjectItemImage}>
                 <Image
-                    src={'/../public/library.jpg'}
+                    src={'/library.jpg'}
                     width={300}
                     height={150}
                     alt={props.project.name}
