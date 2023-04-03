@@ -47,6 +47,7 @@ const Header = () => {
                         api.logout().then(res => {
                             if (!res) return 
                             setUser(null)
+                            location.replace('/')
                         })
                     }
                 }>Выход</div>
